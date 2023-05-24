@@ -11,8 +11,16 @@ const router = express.Router();
     const { sourceLanguage, targetLanguage, sourceCode } = req.body;
 
     const convertService = new ConvertService();
-    const convertedCode = await convertService.convertCode(sourceLanguage, targetLanguage, sourceCode);
-    res.json(convertedCode);
+
+    try{
+      const convertedCode = await convertService.convertCode(sourceLanguage, targetLanguage, sourceCode);
+      
+      res.json(convertedCode);
+      }
+    catch (error) {
+      res.status(error.response.status).send(error);
+    }
+
   });
 
   module.exports = router

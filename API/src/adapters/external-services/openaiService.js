@@ -1,6 +1,7 @@
 const axios = require('axios');
 
 const config = require('../../../config');
+const { response } = require('express');
 
 class openaiService {
 
@@ -30,15 +31,23 @@ class openaiService {
               presence_penalty: 0.0
             };
         
-        try {
-            const response = await axios.post(apiUrl, data, {headers: headers});
+        //try {
+        //    const response = await axios.post(apiUrl, data, {headers: headers});
+//
+        //    return { convertedCode: response.data.choices[0].text.trim() }
+//
+        //} catch (error) {
+        //    console.error('Error converting code:', error);
+        //    return response.status(500).json({ error: 'An error occurred while converting the code.' });
+        //}
 
-            return { convertedCode: response.data.choices[0].text.trim() }
-
-        } catch (error) {
-            console.error('Error converting code:', error);
-            return response.status(500).json({ error: 'An error occurred while converting the code.' });
-        }
+       return await axios.post(apiUrl, data, {headers: headers})
+        .then(response => {
+          return  { convertedCode: response.data.choices[0].text.trim() }
+        })
+        .catch(error => {
+          throw error;
+        });
 
         }
         

@@ -1,6 +1,6 @@
 module.exports = {
     apiUrl: 'https://api.openai.com/v1/completions',
-    apiKey: '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',
+    apiKey: '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',
     port: 3000,
     baseURL: 'http://localhost'
   };

@@ -37,7 +37,8 @@ export class ConverterPageComponent {
       this.isLoading = false; // Ocultar indicador de carregamento
     }, error => {
       console.error('Erro na chamada da API:', error);
-      alert(`Erro: ${error}`);
+      console.log(JSON.stringify( error ));
+      this.convertedCode = JSON.stringify( error );
       this.isLoading = false; // Ocultar indicador de carregamento em caso de erro
     });
   }
