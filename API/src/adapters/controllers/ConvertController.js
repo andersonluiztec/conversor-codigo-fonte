@@ -18,7 +18,12 @@ const router = express.Router();
       res.json(convertedCode);
       }
     catch (error) {
-      res.status(error.response.status).send(error);
+      if (error.response) {
+        res.status(error.response.status).send(error);
+      }
+      else {
+        res.status(500).send(error);
+      }
     }
 
   });
