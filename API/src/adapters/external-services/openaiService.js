@@ -1,14 +1,18 @@
-require('dotenv').config();
 const axios = require('axios');
+var apiKeyOpenAi = '';
+var apiUrlOpenAi = '';
 
 class openaiService {
 
-  constructor() { }
+  constructor() 
+  {
+      apiKeyOpenAi = Buffer.from(process.env.API_KEY_OPENAI, 'base64').toString('ascii');
+      apiUrlOpenAi = process.env.API_URL_OPENAI;
+  }
 
   async convertCode(sourceLanguage, targetLanguage, sourceCode) {
 
-    const apiKeyOpenAi = Buffer.from(process.env.API_KEY_OPENAI, 'base64').toString('ascii');
-    const apiUrlOpenAi = Buffer.from(process.env.API_URL_OPENAI, 'base64').toString('ascii');
+
 
     const headers = {
       'Content-Type': 'application/json',

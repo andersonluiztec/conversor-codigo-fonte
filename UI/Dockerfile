@@ -14,6 +14,7 @@ RUN npm install
 COPY . .
 
 # Execute o comando de build da aplicação
+# RUN npm run build:prod
 RUN npm run build
 
 # Use a imagem base do Nginx para servir a aplicação

@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { config } from '../../config';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-converter-page',
@@ -17,11 +17,29 @@ export class ConverterPageComponent {
 
   constructor(private http: HttpClient) {}
 
+  ngOnInit(): void {
+    this.generateToken();
+  }
+
+  generateToken() {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json'
+    });
+
+    this.http.post<any>(`${environment.apiurl}/auth`, '', { headers })
+    .subscribe(response => {
+      localStorage.setItem('token', response.token);
+    }, error => {
+      console.error('Erro na chamada ao gerar token:', error);
+    });
+  }
+
   convertCode() {
     this.isLoading = true; // Mostrar indicador de carregamento
 
     const headers = new HttpHeaders({
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${localStorage.getItem('token')}`
     });
 
     const data = {
@@ -30,15 +48,19 @@ export class ConverterPageComponent {
       "sourceCode": this.sourceCode
     };
 
-    this.http.post<any>(config.convertCode.apiurl, data, { headers })
+    this.http.post<any>(environment.apiurl, data, { headers })
     .subscribe(response => {
-      console.log(response);
       this.convertedCode = response.convertedCode;
       this.isLoading = false; // Ocultar indicador de carregamento
     }, error => {
       console.error('Erro na chamada da API:', error);
-      console.log(JSON.stringify( error ));
+      console.error(JSON.stringify( error ));
       this.convertedCode = JSON.stringify( error );
+
+      if (error.status === 401) {
+        alert(`Erro de autenticação: ${JSON.stringify(error)}. Favor recarregar a página.`)
+      }
+
       this.isLoading = false; // Ocultar indicador de carregamento em caso de erro
     });
   }

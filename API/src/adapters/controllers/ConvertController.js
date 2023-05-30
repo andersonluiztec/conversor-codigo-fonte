@@ -10,7 +10,7 @@ const router = express.Router();
   router.post('/', async (req, res) => {
     const { sourceLanguage, targetLanguage, sourceCode } = req.body;
 
-    const convertService = new ConvertService();
+    const convertService = new ConvertService(req.config);
 
     try{
       const convertedCode = await convertService.convertCode(sourceLanguage, targetLanguage, sourceCode);

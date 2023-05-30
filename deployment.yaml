@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: conversor-codigo-fonte-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: conversor-codigo-fonte
+  template:
+    metadata:
+      labels:
+        app: conversor-codigo-fonte
+    spec:
+      containers:
+        - name: conversor-codigo-fonte-ui
+          image: andersonluiztec1/conversor-codigo-fonte-ui:latest #gcr.io/<projeto>/nome-da-imagem:tag
+          ports:
+            - containerPort: 80
+        - name: conversor-codigo-fonte-api
+          image: andersonluiztec1/conversor-codigo-fonte-api:latest #gcr.io/<projeto>/nome-da-imagem:tag
+          ports:
+            - containerPort: 3000
+#####################
