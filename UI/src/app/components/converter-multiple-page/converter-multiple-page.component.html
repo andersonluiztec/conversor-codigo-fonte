@@ -1,0 +1,44 @@
+<div class="container mt-5">
+    <h3>Conversão de Múltiplos Arquivos</h3>
+  
+    <div class="mt-4">
+      <div class="form-row">
+        <div class="form-group col-md-4">
+          <label for="sourceLanguage">Linguagem Original:</label>
+          <select class="form-control" id="sourceLanguage" [(ngModel)]="selectedSourceLanguage">
+            <option value="javascript">JavaScript</option>
+            <option value="python">Python</option>
+            <option value="java">Java</option>
+            <!-- Adicione outras opções de linguagem conforme necessário -->
+          </select>
+        </div>
+  
+        <div class="form-group col-md-4">
+          <label for="targetLanguage">Linguagem Final:</label>
+          <select class="form-control" id="targetLanguage" [(ngModel)]="selectedTargetLanguage">
+            <option value="javascript">JavaScript</option>
+            <option value="python">Python</option>
+            <option value="java">Java</option>
+            <!-- Adicione outras opções de linguagem conforme necessário -->
+          </select>
+        </div>
+      </div>
+  
+      <input type="file" multiple (change)="handleFileInput($event)">
+      <button class="btn btn-primary mt-3" [disabled]="!selectedFiles.length" (click)="convertFiles()">Converter</button>
+    </div>
+  
+    <div class="mt-4" *ngIf="selectedFiles.length">
+      <h4>Arquivos Selecionados:</h4>
+      <ul>
+        <li *ngFor="let file of selectedFiles" [ngClass]="{'text-success': fileConversionStatus[file.name] === 'Convertido', 'text-danger': fileConversionStatus[file.name] === 'Falha na Conversão'}">
+          <button class="btn btn-success" *ngIf="fileConversionStatus[file.name] === 'Convertido'" (click)="downloadConvertedFile(file.name)">Download</button>
+          <button class="btn btn-danger" *ngIf="fileConversionStatus[file.name] === 'Falha na Conversão'" (click)="showErrorAlert(file.name)">Detalhes</button>
+          {{ file.name }} - {{ fileConversionStatus[file.name] }}
+        </li>
+      </ul>
+    </div>
+  
+    <button class="btn btn-success mt-3" *ngIf="convertedFiles.length" (click)="downloadConvertedFiles()">Salvar Arquivos Convertidos</button>
+  </div>
+  

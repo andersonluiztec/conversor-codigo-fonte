@@ -294,11 +294,23 @@
 </style>
 
 <!-- Toolbar --> 
-<div class="toolbar" role="banner">
-  <img src="http://www.bv.com.br/site/resources/images/novo-menu/logo-bv-newmenu.png" width="59" height="40" alt="banco BV" title="banco BV">
-  <span>Conversor de Codigo Fonte</span>
-    <div class="spacer"></div>
-</div>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">
+      <img src="http://www.bv.com.br/site/resources/images/novo-menu/logo-bv-newmenu.png" width="59" height="40" alt="banco BV" title="banco BV">
+      <span class="navbar-text" style="margin-left: 2%; font-size: medium;">Conversor de Código Fonte</span>
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+      <div class="navbar-nav">
+        <a class="nav-link" style="color:#eeeeee" routerLink="/converterpage">Conversão Individual</a>
+        <a class="nav-link" style="color:#eeeeee" routerLink="/convertermultiplepage">Conversão Múltipla</a>
+      </div>
+    </div>
+  </div>
+</nav>
 
 <div class="content" role="main">
 
@@ -312,6 +324,6 @@
 </div>
 
 
-<app-converter-page></app-converter-page>
+<!--<app-converter-page></app-converter-page>-->
 
 <router-outlet></router-outlet>
