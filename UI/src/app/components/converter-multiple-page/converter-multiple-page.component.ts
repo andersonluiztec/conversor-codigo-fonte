@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { saveAs } from 'file-saver';
 import * as JSZip from 'jszip';
+import { ConverterService } from 'src/app/services/converter.service';
 
 @Component({
   selector: 'app-converter-multiple-page',
@@ -8,44 +9,74 @@ import * as JSZip from 'jszip';
   styleUrls: ['./converter-multiple-page.component.css']
 })
 export class ConverterMultiplePageComponent {
-  selectedSourceLanguage: string | undefined;
-  selectedTargetLanguage: string | undefined;
+  selectedSourceLanguage: string = 'Visual Basic';
+  selectedTargetLanguage: string = 'java';
   selectedFiles: File[] = [];
   convertedFiles: any[] = [];
   fileConversionStatus: { [key: string]: string } = {};
+
+  constructor(private converterService: ConverterService) { 
+  }
 
   handleFileInput(event: any) {
     this.selectedFiles = event.target.files;
   }
 
-  convertFiles() {
+  async convertFiles() {
     for (let i = 0; i < this.selectedFiles.length; i++) {
       const file = this.selectedFiles[i];
-      // Implemente a lógica de conversão do arquivo aqui
-      // Utilize as variáveis selectedSourceLanguage, selectedTargetLanguage e file
-      // Atualize a variável convertedFiles com o arquivo convertido
-      // Atualize a variável fileConversionStatus com o status da conversão do arquivo
-      // Exemplo:
-      const convertedFile = this.convertFile(file);
+
+
+      const convertedFile = await this.convertFile(file);
       this.convertedFiles.push(convertedFile);
-
-      if (i === 1) {
-        this.fileConversionStatus[file.name] = 'Falha na Conversão';
-      } else {  
-        this.fileConversionStatus[file.name] = 'Convertido';
-      }
     }
+
+    console.log(this.convertedFiles);
   }
 
-  convertFile(file: File): any {
-    // Implemente a lógica de conversão do arquivo aqui
-    // Retorne o arquivo convertido
-    // Exemplo:
-    return {
-      name: file.name,
-      content: 'Conteúdo do arquivo convertido'
-    };
+  private getContentFile(file: File): Promise<string> {
+    return new Promise<string>((resolve, reject) => {
+      const reader = new FileReader();
+  
+      reader.onload = (event: any) => {
+        const content = event.target.result;
+        resolve(content);
+      };
+  
+      reader.onerror = (event: any) => {
+        reject(event.target.error);
+      };
+  
+      reader.readAsText(file);
+    });
   }
+
+  async convertFile(file: File) {
+
+    let convertedCode = '';
+    let sourceCode = await this.getContentFile(file);
+    this.fileConversionStatus[file.name] = 'Convertendo';
+
+    await this.converterService.convertCode(this.selectedSourceLanguage, this.selectedTargetLanguage, sourceCode)
+    .then( response => {
+      convertedCode = response.convertedCode;
+      this.fileConversionStatus[file.name] = 'Sucesso';                                
+    })
+    .catch(error => {
+      convertedCode = JSON.stringify( error );
+      this.fileConversionStatus[file.name] = 'Falha';                
+    });
+
+    const data = {
+      name: file.name,
+      content: convertedCode
+    };
+
+    return data;
+
+}
+
+
 
   downloadConvertedFile(fileName: string) {
     const convertedFile = this.convertedFiles.find(file => file.name === fileName);

@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { environment } from '../../../environments/environment';
+import { ConverterService } from 'src/app/services/converter.service';
 
 @Component({
   selector: 'app-converter-page',
@@ -15,53 +14,23 @@ export class ConverterPageComponent {
   convertedCode!: string;
   isLoading: boolean = false;
 
-  constructor(private http: HttpClient) {}
+  constructor(private converterService: ConverterService) {}
 
   ngOnInit(): void {
-    this.generateToken();
-  }
-
-  generateToken() {
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json'
-    });
-
-    this.http.post<any>(`${environment.apiurl}/auth`, '', { headers })
-    .subscribe(response => {
-      localStorage.setItem('token', response.token);
-    }, error => {
-      console.error('Erro na chamada ao gerar token:', error);
-    });
+    this.converterService.generateToken();
   }
 
   convertCode() {
-    this.isLoading = true; // Mostrar indicador de carregamento
+    this.isLoading = true; 
 
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${localStorage.getItem('token')}`
-    });
-
-    const data = {
-      "sourceLanguage": this.selectedSourceLanguage,
-      "targetLanguage": this.selectedTargetLanguage,
-      "sourceCode": this.sourceCode
-    };
-
-    this.http.post<any>(environment.apiurl, data, { headers })
-    .subscribe(response => {
+    this.converterService.convertCode(this.selectedSourceLanguage, this.selectedTargetLanguage, this.sourceCode)
+    .then( response => {
       this.convertedCode = response.convertedCode;
-      this.isLoading = false; // Ocultar indicador de carregamento
-    }, error => {
-      console.error('Erro na chamada da API:', error);
-      console.error(JSON.stringify( error ));
+      this.isLoading = false;                
+    })
+    .catch(error => {
       this.convertedCode = JSON.stringify( error );
-
-      if (error.status === 401) {
-        alert(`Erro de autenticação: ${JSON.stringify(error)}. Favor recarregar a página.`)
-      }
-
-      this.isLoading = false; // Ocultar indicador de carregamento em caso de erro
+      this.isLoading = false; 
     });
   }
 

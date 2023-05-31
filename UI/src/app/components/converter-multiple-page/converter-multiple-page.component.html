@@ -6,20 +6,24 @@
         <div class="form-group col-md-4">
           <label for="sourceLanguage">Linguagem Original:</label>
           <select class="form-control" id="sourceLanguage" [(ngModel)]="selectedSourceLanguage">
-            <option value="javascript">JavaScript</option>
+            <option value="Visual Basic">Visual Basic</option>
+            <option value="C#">C#</option>
+            <option value="C++">C++</option>
             <option value="python">Python</option>
+            <option value="javascript">JavaScript</option>
             <option value="java">Java</option>
-            <!-- Adicione outras opções de linguagem conforme necessário -->
           </select>
         </div>
   
         <div class="form-group col-md-4">
           <label for="targetLanguage">Linguagem Final:</label>
           <select class="form-control" id="targetLanguage" [(ngModel)]="selectedTargetLanguage">
-            <option value="javascript">JavaScript</option>
+            <option value="Visual Basic">Visual Basic</option>
+            <option value="C#">C#</option>
+            <option value="C++">C++</option>
             <option value="python">Python</option>
+            <option value="javascript">JavaScript</option>
             <option value="java">Java</option>
-            <!-- Adicione outras opções de linguagem conforme necessário -->
           </select>
         </div>
       </div>
@@ -31,10 +35,11 @@
     <div class="mt-4" *ngIf="selectedFiles.length">
       <h4>Arquivos Selecionados:</h4>
       <ul>
-        <li *ngFor="let file of selectedFiles" [ngClass]="{'text-success': fileConversionStatus[file.name] === 'Convertido', 'text-danger': fileConversionStatus[file.name] === 'Falha na Conversão'}">
-          <button class="btn btn-success" *ngIf="fileConversionStatus[file.name] === 'Convertido'" (click)="downloadConvertedFile(file.name)">Download</button>
-          <button class="btn btn-danger" *ngIf="fileConversionStatus[file.name] === 'Falha na Conversão'" (click)="showErrorAlert(file.name)">Detalhes</button>
+        <li *ngFor="let file of selectedFiles" [ngClass]="{'text-success': fileConversionStatus[file.name] === 'Sucesso', 'text-danger': fileConversionStatus[file.name] === 'Falha'}">
+          <button class="btn btn-success" *ngIf="fileConversionStatus[file.name] === 'Sucesso'" (click)="downloadConvertedFile(file.name)">Download</button>
+          <button class="btn btn-danger" *ngIf="fileConversionStatus[file.name] === 'Falha'" (click)="showErrorAlert(file.name)">Detalhes</button>
           {{ file.name }} - {{ fileConversionStatus[file.name] }}
+          <div *ngIf="fileConversionStatus[file.name] === 'Convertendo'" class="custom-loader"></div>
         </li>
       </ul>
     </div>
